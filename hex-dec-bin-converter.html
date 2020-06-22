@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+</style>
+</head>
+<body>
+<div id="top-ad">
+	<ins class="adsbygoogle adslot_1"
+	     data-ad-client="ca-pub-5335356106950684"
+	     data-ad-slot="6506963100"></ins>
+</div>
+	
+<div id="lcol">
+
+	<div id="doc">
+	<form id="calcform" name="calcform" autocomplete="off">
+   <div class="form-group">
+      <select id="format" name="format" class="form-control" hidden>
+         <option>Number</option>
+      </select>
+   </div>
+   <div class="form-group">
+      <label for="hex">Hex</label>
+      <div class="input-group">
+      <textarea rows="2" id="hex" name="hex" oninput="input(1)" class="form-control form-control-lg" autofocus></textarea>
+      <div class="input-group-append">
+         <span class="input-group-text">16</span>
+      </div>
+      </div>
+   </div>
+   <div class="form-group">
+      <label for="hex">Decimal</label>
+      <div class="input-group">
+      <textarea rows="2" id="dec" name="dec" oninput="input(2)" class="form-control form-control-lg"></textarea>
+      <div class="input-group-append">
+         <span class="input-group-text">10</span>
+      </div>
+      </div>
+   </div>
+   <div class="form-group">
+      <label for="hex">Octal</label>
+      <div class="input-group">
+      <textarea rows="2" id="oct" name="oct" oninput="input(3)" class="form-control form-control-lg"></textarea>
+      <div class="input-group-append">
+         <span class="input-group-text">8</span>
+      </div>
+      </div>
+   </div>
+   <div class="form-group">
+      <label for="hex">Binary</label>
+      <div class="input-group">
+      <textarea rows="2" id="bin" name="bin" oninput="input(4)" class="form-control form-control-lg"></textarea>
+      <div class="input-group-append">
+         <span class="input-group-text">2</span>
+      </div>
+      </div>
+   </div>
+   <div class="form-group">
+      <table id="bit">
+      <tr>
+         <td>31</td>
+         <td>30</td>
+         <td>29</td>
+         <td>28</td>
+         <td>27</td>
+         <td>26</td>
+         <td>25</td>
+         <td>24</td>
+         <td>23</td>
+         <td>22</td>
+         <td>21</td>
+         <td>20</td>
+         <td>19</td>
+         <td>18</td>
+         <td>17</td>
+         <td>16</td>
+         <td>15</td>
+         <td>14</td>
+         <td>13</td>
+         <td>12</td>
+         <td>11</td>
+         <td>10</td>
+         <td>9</td>
+         <td>8</td>
+         <td>7</td>
+         <td>6</td>
+         <td>5</td>
+         <td>4</td>
+         <td>3</td>
+         <td>2</td>
+         <td>1</td>
+         <td>0</td>
+      </tr>
+      <tr>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+         <td>0</td>
+      </tr>
+		</table>
+   </div>
+   <button type="reset" title="Reset" class="btn btn-secondary" onclick="resetall()">Reset</button>
+	</form>
+	<script src="bignumber.min.js"></script>
+	<script>
+		var num;
+		//var c = document.getElementsByClassName("calc")[0];
+		//c.rows[10].style.display = "none";
+		//c.rows[11].style.display = "none";
+      document.getElementById("bit").style.display="none";
+		window.onload = function() {
+			var format = document.getElementById("format");
+			num = new BigNumber(0);
+			format.onchange = function() {
+				var i=this.selectedIndex;
+				var bits=32;
+				var width=594;
+				//var calc = document.getElementsByClassName("calc")[0];
+            var b=document.getElementById("bit");
+				if( i==0 || i==4 ) {
+               b.style.display="none";
+				}
+				else {
+               b.style.display="";
+				}
+				if( i==1 ) { bits=8; width=149; }
+				if( i==2 ) { bits=16; width=297; }
+				var table = document.getElementById("bit");
+	 			for(var k=0; k<32-bits; k++) {
+					table.rows[0].cells[k].style.display = "none";
+					table.rows[1].cells[k].style.display = "none";
+				}
+	 			for(var k=32-bits; k<32; k++) {
+					table.rows[0].cells[k].style.display = "";
+					table.rows[1].cells[k].style.display = "";
+				}
+				table.style.width = width+"px";
+				input(2);
+			};
+			var table = document.getElementById("bit");
+			var len=32;
+ 			for (var i=0; i<len; i++) {
+				table.rows[1].cells[i].onclick = function() {
+					var b=this.innerHTML;
+					var k=31-this.cellIndex;
+					var mask = new BigNumber(2);
+					mask = mask.pow(k);
+					if( b=="0" ) {
+						this.innerHTML="1";
+						num = num.add(mask);
+					}
+					else {
+						this.innerHTML="0";
+						num = num.sub(mask);
+					}
+					document.calcform.hex.value = num.toString(16).toUpperCase();
+					input(1);
+ 				};
+			}
+		}
+		function resetall() {
+			document.calcform.hex.value = "";
+			document.calcform.dec.value = "";
+			document.calcform.oct.value = "";
+			document.calcform.bin.value = "";
+			var table = document.getElementById("bit");
+			num =  new BigNumber(0);
+ 			for(var k=0; k<32; k++) {
+				table.rows[1].cells[k].innerHTML = "0";
+			}
+		}
+		function input(i) {
+			var ifmt = document.calcform.format.selectedIndex;
+			var hex = document.calcform.hex.value;
+			var dec = document.calcform.dec.value;
+			var oct = document.calcform.oct.value;
+			var bin = document.calcform.bin.value;
+			var x;
+			document.getElementById("hex").style.backgroundColor = "white";
+			document.getElementById("dec").style.backgroundColor = "white";
+			document.getElementById("oct").style.backgroundColor = "white";
+			document.getElementById("bin").style.backgroundColor = "white";
+			if( i==1 ) {
+				if( hex=="" ) { resetall(); return; }
+				try {
+					x = new BigNumber(hex, 16);
+					x = comptonum(x);
+					if( x=="" ) { throw ""; }
+				}
+				catch(err) {
+					document.getElementById("hex").style.backgroundColor = "#fff0f0";
+					return;
+				}
+			}
+			if( i==2 ) {
+				if( dec=="" ) { resetall(); return; }
+				try {
+					x = new BigNumber(dec, 10);
+				}
+				catch(err) {
+					document.getElementById("dec").style.backgroundColor = "#fff0f0";
+					return;
+				}
+			}
+			if( i==3 ) {
+				if( oct=="" ) { resetall(); return; }
+				try {
+					x = new BigNumber(oct, 8);
+				}
+				catch(err) {
+					document.getElementById("oct").style.backgroundColor = "#fff0f0";
+					return;
+				}
+			}
+			if( i==4 ) {
+				if( bin=="" ) { resetall(); return; }
+				try {
+					x = new BigNumber(bin, 2);
+					x = comptonum(x);
+					if( x=="" ) { throw ""; }
+				}
+				catch(err) {
+					document.getElementById("bin").style.backgroundColor = "#fff0f0";
+					return;
+				}
+			}
+			var y = numtocomp(x);
+			if( i!=1 ) document.calcform.hex.value = y.toString(16).toUpperCase();
+			if( i!=2 ) document.calcform.dec.value = x.toString(10);
+			if( i!=3 ) document.calcform.oct.value = x.toString(8);
+			if( i!=4 ) document.calcform.bin.value = y.toString(2);
+			
+			setbits(x);
+		}
+		function comptonum(x) {
+			var ifmt = document.calcform.format.selectedIndex;
+			var y = new BigNumber(x);
+			if( ifmt>0 ) {
+				var look=["0","256","65536","4294967296","18446744073709551616"];
+				var max=["0","127","32767","2147483647","9223372036854775807"];
+				if( x.gt(max[ifmt]) ) y=y.sub(look[ifmt]);
+				if( x.isNeg() || x.gte(look[ifmt]) ) y="";
+			}
+			return y;
+		}
+		function numtocomp(x) {
+			var ifmt = document.calcform.format.selectedIndex;
+			var y = new BigNumber(x);
+			x = new BigNumber(x);
+			if( ifmt>0 ) {
+				var look=["0","256","65536","4294967296","18446744073709551616"];
+				var min=["0","-128","-32768","-2147483648","-9223372036854775808"];
+				var max=["0","127","32767","2147483647","9223372036854775807"];
+				if( x.isNeg() ) y=y.add(look[ifmt]);
+				if( x.gt(max[ifmt]) || x.lt(min[ifmt]) ) y="";
+			}
+			return y;
+		}
+		function setbits(x) {
+			var table = document.getElementById("bit");
+			//!!!if( x!=Math.round(x) ) 
+			x = numtocomp(x);
+			x = x.toString(2);
+			var len=x.length;
+			if( len>32 )
+				x = x.substring(len-1-31,len-1);
+			
+			num = new BigNumber(0);
+			
+ 			for(var k=0; k<32-x.length; k++) {
+				table.rows[1].cells[k].innerHTML = "0";
+			}
+ 			for(var k=0; k<x.length; k++) {
+				table.rows[1].cells[k+32-x.length].innerHTML = x.charAt(k);
+				if( x.charAt(k)=="1" ) {
+					//var mask=Math.pow(2,x.length-1-k);
+					var mask = new BigNumber(2);
+					mask = mask.pow(x.length-1-k);
+					num = num.add(mask);
+				}
+			}
+		}
+	</script>
+	<!-- #EndEditable -->
+	
+</div>
+
+</div>
+
